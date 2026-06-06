@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button"
 export default function Navbar({
   nombre,
   onLogout,
+  badge,
 }: {
   nombre: string
   onLogout: () => void
+  badge?: string
 }) {
   const iniciales = nombre
     .split(" ")
@@ -27,6 +29,11 @@ export default function Navbar({
           <span className="hidden text-sm font-semibold tracking-tight text-foreground sm:inline">
             Servicio Social
           </span>
+          {badge && (
+            <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-accent-foreground">
+              {badge}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
