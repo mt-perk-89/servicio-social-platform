@@ -45,26 +45,34 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col lg:flex-row">
       {/* Panel informativo */}
-      <section className="relative flex flex-1 flex-col justify-between bg-primary px-8 py-12 text-primary-foreground lg:px-12">
-        <div className="flex items-center gap-2">
-          <GraduationCap className="size-7" />
+      <section className="relative flex flex-1 flex-col justify-between overflow-hidden bg-primary px-8 py-12 text-primary-foreground lg:px-12">
+        {/* Formas decorativas en movimiento */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="animate-float-slow absolute -left-16 top-10 size-64 rounded-full bg-primary-foreground/5 blur-2xl" />
+          <div className="animate-float-medium absolute -right-10 top-1/3 size-72 rounded-full bg-accent/20 blur-3xl" />
+          <div className="animate-drift absolute bottom-10 left-1/4 size-40 rounded-full bg-primary-foreground/5 blur-2xl" />
+        </div>
+
+        <div className="relative flex items-center gap-2">
+          <GraduationCap className="size-7 animate-float-medium" />
           <span className="text-lg font-semibold tracking-tight">
             Servicio Social
           </span>
         </div>
 
-        <div className="max-w-md space-y-6 py-12">
-          <h1 className="text-balance text-3xl font-bold leading-tight lg:text-4xl">
+        <div className="relative max-w-md space-y-6 py-12">
+          <h1 className="animate-rise-in text-balance text-3xl font-bold leading-tight lg:text-4xl">
             Encuentra tu Unidad Receptora ideal con datos, no con suerte.
           </h1>
-          <p className="text-pretty leading-relaxed text-primary-foreground/80">
+          <span className="animate-shimmer-line block h-1 w-24 rounded-full bg-accent" />
+          <p className="animate-rise-in delay-100 text-pretty leading-relaxed text-primary-foreground/80">
             Plataforma de gestión que combina geolocalización y un motor de
             recomendación inteligente para conectarte con las mejores vacantes.
           </p>
 
           <ul className="space-y-4 pt-4">
-            <li className="flex items-start gap-3">
-              <span className="mt-0.5 rounded-md bg-primary-foreground/15 p-2">
+            <li className="animate-slide-in-left delay-300 flex items-start gap-3">
+              <span className="mt-0.5 rounded-md bg-primary-foreground/15 p-2 transition-transform duration-300 hover:scale-110">
                 <MapPin className="size-4" />
               </span>
               <div>
@@ -74,8 +82,8 @@ export default function LoginPage() {
                 </p>
               </div>
             </li>
-            <li className="flex items-start gap-3">
-              <span className="mt-0.5 rounded-md bg-primary-foreground/15 p-2">
+            <li className="animate-slide-in-left delay-500 flex items-start gap-3">
+              <span className="mt-0.5 rounded-md bg-primary-foreground/15 p-2 transition-transform duration-300 hover:scale-110">
                 <Sparkles className="size-4" />
               </span>
               <div>
@@ -88,14 +96,14 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <p className="text-xs text-primary-foreground/60">
+        <p className="relative text-xs text-primary-foreground/60">
           Servicio Social Platform · Neo4j Aura · Next.js
         </p>
       </section>
 
       {/* Formulario */}
       <section className="flex flex-1 items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm space-y-8">
+        <div className="animate-rise-in delay-200 w-full max-w-sm space-y-8">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
               Iniciar sesión

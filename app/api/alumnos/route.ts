@@ -7,6 +7,38 @@ import { getSession } from "@/lib/auth"
 const BASE_LAT = 19.4326
 const BASE_LNG = -99.1332
 
+// LEER: lista todos los alumnos (solo admin).
+export async function GET(request: Request) {
+  const session = await getSession(request)
+  if (!session || session.rol !== "admin") {
+    return NextResponse.json(
+      { error: "Solo el administrador puede ver los alumnos." },
+      { status: 403 },
+    )
+  }
+
+  try {
+    const rows = await runQuery<{
+      correo: string
+      nombre: string
+      habilidades: string[]
+      postulaciones: number
+    }>(
+      `MATCH (a:Alumno)
+       WHERE coalesce(a.rol, 'alumno') = 'alumno'
+       OPTIONAL MATCH (a)-[r:POSTULADO_EN]->(:UnidadReceptora)
+       RETURN a.correo AS correo, a.nombre AS nombre,
+              coalesce(a.habilidades, []) AS habilidades,
+              count(r) AS postulaciones
+       ORDER BY a.nombre`,
+    )
+    return NextResponse.json({ alumnos: rows })
+  } catch (error) {
+    console.error("[v0] Error al listar alumnos:", error)
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
+  }
+}
+
 // DAR DE ALTA un alumno (solo admin).
 export async function POST(request: Request) {
   const session = await getSession(request)

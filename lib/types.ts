@@ -35,3 +35,19 @@ export type Postulacion = {
   estado: string
   fecha_inicio: string
 }
+
+export type SolicitudAdmin = {
+  correo: string
+  nombre: string
+  id_unidad: string
+  nombre_dependencia: string
+  estado: string
+  fecha_inicio: string
+}
+
+export type AlumnoResumen = {
+  correo: string
+  nombre: string
+  habilidades: string[]
+  postulaciones: number
+}
