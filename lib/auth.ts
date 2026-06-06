@@ -4,9 +4,12 @@ const secret = new TextEncoder().encode(
   process.env.JWT_SECRET || "dev-secret-change-me",
 )
 
+export type Rol = "alumno" | "admin"
+
 export type SessionPayload = {
   correo: string
   nombre: string
+  rol: Rol
 }
 
 export async function createToken(payload: SessionPayload): Promise<string> {
@@ -25,6 +28,7 @@ export async function verifyToken(
     return {
       correo: payload.correo as string,
       nombre: payload.nombre as string,
+      rol: (payload.rol as Rol) ?? "alumno",
     }
   } catch {
     return null

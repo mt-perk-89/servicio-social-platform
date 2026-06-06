@@ -8,9 +8,19 @@ const BASE_LNG = -99.1332
 
 const ALUMNOS = [
   {
+    correo: "admin@uni.edu",
+    password: "admin123",
+    nombre: "Administrador",
+    rol: "admin",
+    habilidades: [],
+    lat: BASE_LAT,
+    lng: BASE_LNG,
+  },
+  {
     correo: "ana@uni.edu",
     password: "123456",
     nombre: "Ana López",
+    rol: "alumno",
     habilidades: ["JavaScript", "React", "Node.js", "SQL", "Python"],
     lat: BASE_LAT,
     lng: BASE_LNG,
@@ -19,6 +29,7 @@ const ALUMNOS = [
     correo: "carlos@uni.edu",
     password: "123456",
     nombre: "Carlos Méndez",
+    rol: "alumno",
     habilidades: ["Python", "Machine Learning", "SQL", "Docker"],
     lat: BASE_LAT + 0.01,
     lng: BASE_LNG + 0.01,
@@ -80,6 +91,7 @@ export async function POST() {
           correo: $correo,
           password: $password,
           nombre: $nombre,
+          rol: $rol,
           habilidades: $habilidades,
           ubicacion: point({latitude: $lat, longitude: $lng})
         })`,

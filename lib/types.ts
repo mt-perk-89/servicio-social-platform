@@ -1,6 +1,7 @@
 export type Alumno = {
   correo: string
   nombre: string
+  rol?: "alumno" | "admin"
   habilidades: string[]
   lat: number
   lng: number

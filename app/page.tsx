@@ -3,11 +3,12 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { GraduationCap, Loader2, MapPin, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { apiFetch, getToken, saveSession } from "@/lib/client"
+import { apiFetch, getAlumno, getToken, saveSession } from "@/lib/client"
 import { toast } from "sonner"
 
 export default function LoginPage() {
@@ -18,7 +19,10 @@ export default function LoginPage() {
   const [seeding, setSeeding] = useState(false)
 
   useEffect(() => {
-    if (getToken()) router.replace("/dashboard")
+    if (getToken()) {
+      const a = getAlumno()
+      router.replace(a?.rol === "admin" ? "/admin" : "/dashboard")
+    }
   }, [router])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -31,7 +35,7 @@ export default function LoginPage() {
       })
       saveSession(data.token, data.alumno)
       toast.success(`Bienvenido, ${data.alumno.nombre}`)
-      router.push("/dashboard")
+      router.push(data.alumno.rol === "admin" ? "/admin" : "/dashboard")
     } catch (err) {
       toast.error((err as Error).message)
     } finally {
@@ -142,6 +146,16 @@ export default function LoginPage() {
               Entrar
             </Button>
           </form>
+
+          <p className="text-center text-sm text-muted-foreground">
+            ¿No tienes cuenta?{" "}
+            <Link
+              href="/registro"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Crea una aquí
+            </Link>
+          </p>
 
           <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm">
             <p className="font-medium text-foreground">Primera vez aquí?</p>

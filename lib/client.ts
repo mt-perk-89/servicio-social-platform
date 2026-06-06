@@ -1,7 +1,11 @@
 const TOKEN_KEY = "ss_token"
 const ALUMNO_KEY = "ss_alumno"
 
-export type StoredAlumno = { correo: string; nombre: string }
+export type StoredAlumno = {
+  correo: string
+  nombre: string
+  rol?: "alumno" | "admin"
+}
 
 export function saveSession(token: string, alumno: StoredAlumno) {
   localStorage.setItem(TOKEN_KEY, token)
