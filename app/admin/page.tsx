@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Building2, Loader2, MapPin, Trash2 } from "lucide-react"
 import { toast } from "sonner"
@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Navbar from "@/components/navbar"
 import { FormUnidad } from "@/components/form-unidad"
+import { FormAlumno } from "@/components/form-alumno"
+import { GestionSolicitudes } from "@/components/gestion-solicitudes"
+import { ListaAlumnos, type ListaAlumnosHandle } from "@/components/lista-alumnos"
 import { apiFetch, clearSession, getAlumno, getToken } from "@/lib/client"
 import type { UnidadReceptora } from "@/lib/types"
 
@@ -17,6 +20,7 @@ export default function AdminPage() {
   const [unidades, setUnidades] = useState<UnidadReceptora[]>([])
   const [loading, setLoading] = useState(true)
   const [eliminando, setEliminando] = useState<string | null>(null)
+  const listaAlumnosRef = useRef<ListaAlumnosHandle>(null)
 
   const cargarUnidades = useCallback(async () => {
     try {
@@ -73,15 +77,20 @@ export default function AdminPage() {
             Panel de administración
           </h1>
           <p className="mt-1 text-sm text-muted-foreground text-pretty">
-            Da de alta y gestiona las unidades receptoras donde los alumnos
-            realizarán su servicio social.
+            Da de alta unidades y alumnos, y aprueba o rechaza las
+            postulaciones de servicio social.
           </p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           <FormUnidad onCreada={cargarUnidades} />
+          <FormAlumno onCreado={() => listaAlumnosRef.current?.recargar()} />
 
-          <Card>
+          <GestionSolicitudes />
+
+          <ListaAlumnos ref={listaAlumnosRef} />
+
+          <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Building2 className="size-5 text-primary" />
