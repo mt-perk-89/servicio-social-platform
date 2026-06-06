@@ -34,6 +34,33 @@ const ALUMNOS = [
     lat: BASE_LAT + 0.01,
     lng: BASE_LNG + 0.01,
   },
+  {
+    correo: "sofia@uni.edu",
+    password: "123456",
+    nombre: "Sofía Ramírez",
+    rol: "alumno",
+    habilidades: ["React", "JavaScript", "Node.js", "Docker"],
+    lat: BASE_LAT - 0.015,
+    lng: BASE_LNG + 0.012,
+  },
+  {
+    correo: "diego@uni.edu",
+    password: "123456",
+    nombre: "Diego Torres",
+    rol: "alumno",
+    habilidades: ["Python", "SQL", "Estadística", "Excel"],
+    lat: BASE_LAT + 0.022,
+    lng: BASE_LNG - 0.018,
+  },
+  {
+    correo: "valeria@uni.edu",
+    password: "123456",
+    nombre: "Valeria Núñez",
+    rol: "alumno",
+    habilidades: ["Machine Learning", "Python", "React", "SQL"],
+    lat: BASE_LAT + 0.028,
+    lng: BASE_LNG + 0.026,
+  },
 ]
 
 const UNIDADES = [
@@ -115,7 +142,7 @@ export async function POST() {
     return NextResponse.json({
       ok: true,
       mensaje: "Base de datos sembrada correctamente.",
-      alumnos: ALUMNOS.map((a) => ({ correo: a.correo, password: "123456" })),
+      alumnos: ALUMNOS.map((a) => ({ correo: a.correo, password: a.password, rol: a.rol })),
       unidades: UNIDADES.length,
     })
   } catch (error) {
