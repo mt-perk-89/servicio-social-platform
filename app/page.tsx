@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [correo, setCorreo] = useState("ana@uni.edu")
   const [password, setPassword] = useState("123456")
   const [loading, setLoading] = useState(false)
-  const [seeding, setSeeding] = useState(false)
 
   useEffect(() => {
     if (getToken()) {
@@ -40,18 +39,6 @@ export default function LoginPage() {
       toast.error((err as Error).message)
     } finally {
       setLoading(false)
-    }
-  }
-
-  async function handleSeed() {
-    setSeeding(true)
-    try {
-      await apiFetch("/api/seed", { method: "POST" })
-      toast.success("Base de datos sembrada. Ya puedes iniciar sesión.")
-    } catch (err) {
-      toast.error((err as Error).message)
-    } finally {
-      setSeeding(false)
     }
   }
 
@@ -102,7 +89,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-xs text-primary-foreground/60">
-          Proyecto Hashira · Neo4j Aura · Next.js
+          Servicio Social Platform · Neo4j Aura · Next.js
         </p>
       </section>
 
@@ -156,35 +143,6 @@ export default function LoginPage() {
               Crea una aquí
             </Link>
           </p>
-
-          <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm">
-            <p className="font-medium text-foreground">Primera vez aquí?</p>
-            <p className="mt-1 text-muted-foreground">
-              Siembra datos de prueba en Neo4j para empezar. Usuarios:{" "}
-              <code className="rounded bg-secondary px-1 py-0.5 text-xs">
-                ana@uni.edu
-              </code>{" "}
-              /{" "}
-              <code className="rounded bg-secondary px-1 py-0.5 text-xs">
-                carlos@uni.edu
-              </code>{" "}
-              · clave{" "}
-              <code className="rounded bg-secondary px-1 py-0.5 text-xs">
-                123456
-              </code>
-            </p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-3 w-full"
-              onClick={handleSeed}
-              disabled={seeding}
-            >
-              {seeding && <Loader2 className="size-4 animate-spin" />}
-              Sembrar base de datos
-            </Button>
-          </div>
         </div>
       </section>
     </main>
