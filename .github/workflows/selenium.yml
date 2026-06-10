@@ -1,0 +1,110 @@
+name: Selenium E2E
+
+# Se ejecuta en cada push y pull request, y también de forma manual.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+jobs:
+  selenium:
+    name: Pruebas de automatización (Selenium)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clona el repositorio
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      # 2. Node.js + pnpm para construir y servir la app Next.js
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Construir la aplicación
+        run: pnpm build
+        env:
+          NEO4J_URI: ${{ secrets.NEO4J_URI }}
+          NEO4J_USERNAME: ${{ secrets.NEO4J_USERNAME }}
+          NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+          NEO4J_DATABASE: ${{ secrets.NEO4J_DATABASE }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Iniciar la aplicación
+        run: pnpm start &
+        env:
+          NEO4J_URI: ${{ secrets.NEO4J_URI }}
+          NEO4J_USERNAME: ${{ secrets.NEO4J_USERNAME }}
+          NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+          NEO4J_DATABASE: ${{ secrets.NEO4J_DATABASE }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Esperar a que la app responda
+        run: npx wait-on http://localhost:3000 --timeout 120000
+
+      # 3. Siembra la base de datos de prueba (usuarios y unidades)
+      - name: Sembrar base de datos
+        run: curl -fsS -X POST http://localhost:3000/api/seed
+
+      # 4. Google Chrome (necesario para el WebDriver)
+      - name: Instalar Google Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      # 5. Python + dependencias de Selenium
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias de Selenium
+        run: pip install -r automation/requirements.txt
+
+      # 6. Ejecuta TODAS las pruebas. Cada paso es visible en Actions.
+      - name: Prueba · Login por rol
+        if: always()
+        working-directory: automation
+        run: python test_login.py
+        env:
+          BASE_URL: http://localhost:3000
+
+      - name: Prueba · Alta de unidad receptora
+        if: always()
+        working-directory: automation
+        run: python test_alta_unidad.py
+        env:
+          BASE_URL: http://localhost:3000
+
+      - name: Prueba · Registro de alumno
+        if: always()
+        working-directory: automation
+        run: python test_registro.py
+        env:
+          BASE_URL: http://localhost:3000
+
+      - name: Prueba · Postulación a unidad
+        if: always()
+        working-directory: automation
+        run: python test_postulacion.py
+        env:
+          BASE_URL: http://localhost:3000
+
+      - name: Prueba · Cierre de sesión
+        if: always()
+        working-directory: automation
+        run: python test_logout.py
+        env:
+          BASE_URL: http://localhost:3000

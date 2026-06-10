@@ -40,6 +40,8 @@ existan los usuarios de prueba.
 | `test_login.py` | Inicio de sesión como **admin** y como **alumno**, verificando la redirección por rol (`/admin` vs `/dashboard`). |
 | `test_alta_unidad.py` | Flujo completo de **administrador**: llenar y enviar el formulario para **dar de alta una Unidad Receptora** y verificar que aparezca en la lista. |
 | `test_registro.py` | **Registro** de un nuevo alumno con habilidades y verificación de acceso al dashboard. |
+| `test_postulacion.py` | **Postulación** de un alumno a una Unidad Receptora desde la tabla de recomendaciones, verificando el cambio de estado. |
+| `test_logout.py` | **Cierre de sesión** desde la barra de navegación y verificación de regreso a la pantalla de login. |
 
 ## Ejecución
 
@@ -47,7 +49,24 @@ existan los usuarios de prueba.
 python test_login.py
 python test_alta_unidad.py
 python test_registro.py
+python test_postulacion.py
+python test_logout.py
 ```
+
+## Integración continua (GitHub Actions)
+
+Estas pruebas se ejecutan **automáticamente** en cada `push` y `pull request`
+mediante el workflow [`.github/workflows/selenium.yml`](../.github/workflows/selenium.yml).
+El workflow construye y levanta la app, siembra la base de datos y corre cada
+prueba como un paso independiente, de modo que en la pestaña **Actions** de
+GitHub se ve el resultado de cada una por separado.
+
+> Para que el workflow pueda conectarse a Neo4j Aura, agrega estos **secrets**
+> del repositorio (Settings → Secrets and variables → Actions):
+> `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE` y `JWT_SECRET`.
+
+Para agregar una nueva prueba al pipeline, crea tu `test_*.py` en esta carpeta
+y añade un paso correspondiente en `selenium.yml`.
 
 Cada script imprime su progreso y termina con un código de salida distinto de
 cero si alguna verificación falla, por lo que pueden integrarse en un pipeline
