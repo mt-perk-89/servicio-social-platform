@@ -33,6 +33,7 @@ jobs:
       - name: Instalar pnpm compatible
         run: |
           npm install -g pnpm@8.10.0
+          echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Instalar dependencias de Node
         run: |
