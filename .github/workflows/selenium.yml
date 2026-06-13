@@ -24,17 +24,15 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Activar pnpm compatible
+      - name: Instalar pnpm compatible
         run: |
-          corepack enable
-          corepack prepare pnpm@8.10.0 --activate
+          npm install -g pnpm@8.10.0
 
       - name: Instalar dependencias de Node
         run: |
