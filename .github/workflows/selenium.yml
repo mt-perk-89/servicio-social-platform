@@ -31,10 +31,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.10.0
+      - name: Activar pnpm compatible
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.10.0 --activate
 
       - name: Instalar dependencias de Node
         run: |
