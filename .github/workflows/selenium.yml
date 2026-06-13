@@ -23,7 +23,7 @@ jobs:
       - name: Configurar Node
         uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -34,6 +34,8 @@ jobs:
         run: |
           npm install -g pnpm@8.10.0
           echo "$(npm bin -g)" >> $GITHUB_PATH
+          echo "pnpm binary path: $(npm bin -g)"
+          pnpm --version
 
       - name: Instalar dependencias de Node
         run: |
