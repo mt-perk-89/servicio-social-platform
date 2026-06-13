@@ -23,17 +23,21 @@ jobs:
       - name: Configurar Node
         uses: actions/setup-node@v5
         with:
-          node-version: '22'
+          node-version: '20'
+          cache: 'pnpm'
 
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.10.0
+
       - name: Instalar dependencias de Node
         run: |
-          corepack enable
-          corepack prepare pnpm@8.10.0 --activate
           pnpm install --frozen-lockfile
 
       - name: Instalar dependencias de Python
