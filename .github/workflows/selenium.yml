@@ -33,4 +33,4 @@ jobs:
 
       - name: Ejecutar pruebas Selenium
         run: |
-          pytest automation/test_login.py -v
+          python automation/test_login.py
