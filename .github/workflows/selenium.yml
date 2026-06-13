@@ -13,19 +13,45 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+    env:
+      BASE_URL: http://127.0.0.1:3000
+
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
 
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Instalar dependencias
+      - name: Instalar dependencias de Node
+        run: |
+          corepack enable
+          pnpm install
+
+      - name: Instalar dependencias de Python
         run: |
           pip install pytest selenium webdriver-manager
+
+      - name: Iniciar aplicación Next.js
+        run: |
+          pnpm exec next dev --hostname 127.0.0.1 --port 3000 > /tmp/next.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sSf http://127.0.0.1:3000 >/dev/null; then
+              echo "Servidor Next.js listo"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "No se pudo iniciar el servidor Next.js"
+          cat /tmp/next.log
+          exit 1
 
       - name: Ejecutar pruebas unitarias (pytest)
         run: |
