@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BASE_URL: http://127.0.0.1:3000
+      NEO4J_URI: ${{ secrets.NEO4J_URI }}
+      NEO4J_USERNAME: ${{ secrets.NEO4J_USERNAME }}
+      NEO4J_PASSWORD: ${{ secrets.NEO4J_PASSWORD }}
+      NEO4J_DATABASE: ${{ secrets.NEO4J_DATABASE }}
 
     steps:
       - name: Descargar repositorio
@@ -23,7 +27,7 @@ jobs:
       - name: Configurar Node
         uses: actions/setup-node@v5
         with:
-          node-version: '22'
+          node-version: '20'
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -32,9 +36,8 @@ jobs:
 
       - name: Instalar pnpm compatible
         run: |
-          npm install -g pnpm@9
-          echo "$(npm prefix -g)/bin" >> $GITHUB_PATH
-          echo "pnpm binary path: $(npm prefix -g)/bin"
+          corepack enable
+          corepack prepare pnpm@9 --activate
           pnpm --version
 
       - name: Instalar dependencias de Node
@@ -57,6 +60,20 @@ jobs:
           done
           echo "No se pudo iniciar el servidor Next.js"
           cat /tmp/next.log
+          exit 1
+
+      - name: Sembrar base de datos
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sSf -X POST http://127.0.0.1:3000/api/seed >/dev/null 2>&1; then
+              echo "Base de datos sembrada correctamente"
+              exit 0
+            fi
+            echo "Esperando servidor para seed..."
+            sleep 2
+          done
+          echo "No se pudo sembrar la base de datos"
+          curl -sSf -X POST http://127.0.0.1:3000/api/seed || true
           exit 1
 
       - name: Ejecutar pruebas unitarias (pytest)

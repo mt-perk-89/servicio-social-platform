@@ -70,5 +70,5 @@ def login(driver, correo: str, password: str):
     driver.find_element(By.ID, "password").clear()
     driver.find_element(By.ID, "password").send_keys(password)
     esperar_clickable(driver, By.CSS_SELECTOR, "button[type='submit']").click()
-    # Da tiempo a que ocurra la redirección por rol.
-    time.sleep(1)
+    # Espera a que el navegador navegue tras el submit.
+    WebDriverWait(driver, TIMEOUT).until(EC.url_changes(driver.current_url))
