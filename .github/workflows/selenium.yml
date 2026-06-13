@@ -1,0 +1,36 @@
+name: Selenium Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install pytest selenium webdriver-manager
+
+      - name: Ejecutar pruebas unitarias (pytest)
+        run: |
+          pytest test_validaciones.py -v
+
+      - name: Ejecutar pruebas Selenium
+        run: |
+          pytest automation/test_login.py -v
